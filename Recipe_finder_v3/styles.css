@@ -1,0 +1,129 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* General App Styling */
+.stApp {
+    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Titles and Headers */
+h1,
+h2,
+h3 {
+    color: #2c3e50;
+    font-weight: 700;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+    background: -webkit-linear-gradient(45deg, #ff6b6b, #feca57);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Input Fields */
+.stTextInput>div>div>input {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.stTextInput>div>div>input:focus {
+    border-color: #ff6b6b;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
+}
+
+/* Buttons */
+.stButton>button {
+    width: 100%;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #ff6b6b, #ee5253);
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stButton>button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(238, 82, 83, 0.3);
+    color: white;
+}
+
+.stButton>button:active {
+    transform: translateY(0);
+}
+
+/* Secondary Button (Reset) */
+div[data-testid="column"] .stButton>button {
+    /* Specific targeting might be needed if all buttons get same class */
+    background: linear-gradient(45deg, #7f8c8d, #95a5a6);
+}
+
+/* Cards / Containers */
+.css-1r6slb0 {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* Recipe Text */
+.recipe-text {
+    background-color: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+    color: #444;
+}
+
+/* Image Grid */
+.image-container {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.image-container:hover {
+    transform: scale(1.02);
+}
+
+/* Video Links */
+.video-link {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: background 0.2s;
+}
+
+.video-link:hover {
+    background: #f1f2f6;
+}
+
+.video-thumbnail {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 15px;
+}
+
+.video-title {
+    font-weight: 500;
+}
