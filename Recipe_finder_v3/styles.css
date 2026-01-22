@@ -83,7 +83,25 @@ div[data-testid="column"] .stButton>button {
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     line-height: 1.6;
-    color: #444;
+    color: #333;
+}
+
+.recipe-text h1,
+.recipe-text h2,
+.recipe-text h3,
+.recipe-text h4,
+.recipe-text h5,
+.recipe-text h6,
+.recipe-text p,
+.recipe-text li,
+.recipe-text span,
+.recipe-text strong,
+.recipe-text em {
+    color: #333 !important;
+    background: none !important;
+    -webkit-text-fill-color: #333 !important;
+    background-clip: unset !important;
+    -webkit-background-clip: unset !important;
 }
 
 /* Image Grid */
@@ -126,4 +144,53 @@ div[data-testid="column"] .stButton>button {
 
 .video-title {
     font-weight: 500;
+}
+
+/* Autocomplete Suggestions */
+.autocomplete-container {
+    position: relative;
+    width: 100%;
+}
+
+.suggestions-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: -10px;
+}
+
+.suggestion-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: #f8f9fa;
+}
+
+.suggestion-icon {
+    margin-right: 10px;
+    color: #999;
+}
+
+.suggestion-text {
+    color: #333;
+    font-size: 14px;
 }
