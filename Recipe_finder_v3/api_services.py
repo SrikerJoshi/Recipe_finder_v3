@@ -3,26 +3,35 @@ import asyncio
 import requests
 from PIL import Image
 from io import BytesIO
-from langchain_google_genai import GoogleGenerativeAI
+from groq import Groq
 import streamlit as st
 import os
 
-# Initialize the Google Gemini LLM
-# Note: We need to pass the API key here or ensure it's available in the environment
+# Initialize the Groq LLM
 def get_llm(api_key):
-    return GoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=api_key)
+    return Groq(api_key=api_key)
 
 def get_recipe(llm, dish_name):
     try:
         prompt = f"Provide a detailed, step-by-step recipe for {dish_name}. Include ingredients and instructions. Format it nicely with Markdown."
-        response = llm.generate([prompt])
-        return response.generations[0][0].text if response.generations else 'No recipe found.'
+        
+        chat_completion = llm.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            model="llama-3.3-70b-versatile",
+        )
+        
+        return chat_completion.choices[0].message.content if chat_completion.choices else 'No recipe found.'
     except Exception as e:
         return f"Error fetching recipe: {e}"
 
 async def fetch_youtube_links(dish_name, youtube_api_key):
     try:
-        search_url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={dish_name}&key={youtube_api_key}&maxResults=3&type=video"
+        search_url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={dish_name} recipe&key={youtube_api_key}&maxResults=6&type=video"
         async with aiohttp.ClientSession() as session:
             async with session.get(search_url) as response:
                 response_data = await response.json()
@@ -57,7 +66,7 @@ async def fetch_image(session, url):
 async def fetch_images(dish_name, google_api_key, search_engine_id):
     try:
         # Using Google Custom Search API
-        search_url = f"https://www.googleapis.com/customsearch/v1?q={dish_name}&searchType=image&key={google_api_key}&cx={search_engine_id}&num=5"
+        search_url = f"https://www.googleapis.com/customsearch/v1?q={dish_name} recipe food&searchType=image&key={google_api_key}&cx={search_engine_id}&num=10"
         
         async with aiohttp.ClientSession() as session:
             async with session.get(search_url) as response:
@@ -72,21 +81,25 @@ async def fetch_images(dish_name, google_api_key, search_engine_id):
                 results = await asyncio.gather(*tasks)
                 images = [img for img in results if img is not None]
                 
-        return images[:4] # Return top 4 images for a nice grid
+        return images[:8] # Return top 8 images for a nice grid
         
     except Exception as e:
         print(f"Error fetching images: {e}")
         return []
 
 async def fetch_locations(dish_name, google_places_api_key):
-    try:        
-        places_url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={dish_name}&key={google_places_api_key}"
+    try:
+        if not google_places_api_key:
+            st.error("Google Places API key is not configured. Please set GOOGLE_PLACES_API_KEY in your .env file.")
+            return []
+            
+        places_url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={dish_name} restaurant&key={google_places_api_key}"
         async with aiohttp.ClientSession() as session:
             async with session.get(places_url) as response:
                 places_data = await response.json()
         
         locations = []
-        if 'results' in places_data:
+        if 'results' in places_data and places_data['results']:
             for place in places_data['results'][:5]:
                 locations.append({
                     'name': place['name'],
@@ -96,8 +109,12 @@ async def fetch_locations(dish_name, google_places_api_key):
                 })
         elif 'error_message' in places_data:
             st.error(f"Google Maps API Error: {places_data['error_message']}")
+        elif places_data.get('status') == 'ZERO_RESULTS':
+            st.warning(f"No restaurants found for '{dish_name}'")
+        elif places_data.get('status') != 'OK':
+            st.error(f"Google Places API returned status: {places_data.get('status')}")
         
         return locations
     except Exception as e:
-        print(f"Error fetching locations: {e}")
+        st.error(f"Error fetching locations: {e}")
         return []
